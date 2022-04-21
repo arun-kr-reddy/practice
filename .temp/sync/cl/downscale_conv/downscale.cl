@@ -6,8 +6,8 @@ __kernel void downscale(__global unsigned char* src_buff,
                         __global unsigned char* dst_buff,
                         __global const_args* args)
 {
-    int Row = get_global_id(0); // horz
-    int Col = get_global_id(1); // vert
+    int Row = get_global_id(1); // horz
+    int Col = get_global_id(0); // vert
 
     // init
     int iWidth = args->src_width;
@@ -39,8 +39,8 @@ __kernel void convolution(__global unsigned char* src_buff,
                         __global unsigned char* dst_buff,
                         __global const_args* args)
 {
-    int y = get_global_id(0); // vert
-    int x = get_global_id(1); // horz
+    int y = get_global_id(1); // vert
+    int x = get_global_id(0); // horz
 
     // init
     int width = args->dst_width;

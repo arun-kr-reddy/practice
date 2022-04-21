@@ -1,0 +1,34 @@
+#version 450
+
+layout (std430, set=0, binding=0) buffer InBuffer { uint dst_buff[]; };
+layout (std430, set=0, binding=1) buffer OutBuffer { uint src_buff[]; };
+
+#define WIDTH 900
+#define HEIGHT 300
+
+void main() {
+    const uint x = gl_GlobalInvocationID.x; // 1024
+    const uint y = gl_GlobalInvocationID.y; // 768
+
+    // init
+    uint width = WIDTH;
+    uint height = HEIGHT;
+
+    uint ker_size = 9;
+    int ker_half_size = (int(ker_size) - 1)/2;
+    uint sum = 0;
+    for(int ker_y = -ker_half_size ; ker_y <= ker_half_size ; ker_y++)
+    {
+        for(int ker_x = -ker_half_size ; ker_x <= ker_half_size ; ker_x++)
+        {
+            int pos_y = int(y) + ker_y;
+            int pos_x = int(x) + ker_x;
+            if((pos_x >= 0) || (pos_x < width) || (pos_y >= 0) || (pos_y < height))
+            {
+                sum += src_buff[pos_y * width + pos_x];
+                //printf("%d %d %d\n", pos_x, pos_y, src_buff[pos_y * width + pos_x]);
+            }
+        }
+    }
+    dst_buff[y * width + x] = sum / (ker_size * ker_size);
+}

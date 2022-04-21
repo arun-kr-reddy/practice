@@ -1,0 +1,40 @@
+#version 450
+
+layout (std430, set=0, binding=0) buffer InBuffer { uint src_buff[]; };
+layout (std430, set=0, binding=1) buffer OutBuffer { uint dst_buff[]; };
+
+#define SRC_WIDTH 1280
+#define SRC_HEIGHT 806
+#define DST_WIDTH 900
+#define DST_HEIGHT 300
+
+void main() {
+    const uint Col = gl_GlobalInvocationID.x;
+    const uint Row = gl_GlobalInvocationID.y;
+
+    // init
+    uint iWidth = SRC_WIDTH;
+    uint iHeight = SRC_HEIGHT;
+    uint OutWidth = DST_WIDTH;
+    uint OutHeight = DST_HEIGHT;
+
+    float x_ratio = float(iWidth - 1) / float(OutWidth);
+    float y_ratio = float(iHeight - 1) / float(OutHeight);
+
+    // processing
+    uint x = uint(x_ratio * Col);
+    uint y = uint(y_ratio * Row);
+    float x_diff = (x_ratio * Col) - x;
+    float y_diff = (y_ratio * Row) - y;
+    uint index = y * iWidth + x;
+    uint A = src_buff[index] & 0xff;
+    uint B = src_buff[index + 1] & 0xff;
+    uint C = src_buff[index + iWidth] & 0xff;
+    uint D = src_buff[index + iWidth + 1] & 0xff;
+    uint Pixel = uint(( A * (1 - x_diff) * (1 - y_diff) 
+                        + B * (x_diff) * (1 - y_diff) 
+                        + C * (y_diff) * (1 - x_diff) 
+                        + D * (x_diff * y_diff)));
+    dst_buff[(Row * OutWidth) + Col] = Pixel;
+}
+

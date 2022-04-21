@@ -1,0 +1,14 @@
+#version 450
+
+layout (std430, set=0, binding=0) buffer InBuffer { uint a[]; };
+layout (std430, set=0, binding=1) buffer OutBuffer { uint b[]; };
+
+#define SRC_WIDTH 1280
+#define DST_WIDTH 1280
+
+void main() {
+  const uint x = gl_GlobalInvocationID.x; // 1024
+  const uint y = gl_GlobalInvocationID.y; // 768
+
+  b[y*DST_WIDTH + x] = a[y*SRC_WIDTH + x];//a[i]%255;
+}
