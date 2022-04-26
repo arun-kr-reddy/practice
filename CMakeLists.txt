@@ -4,6 +4,6 @@ project(test_project)
 
 include_directories(include)
 
-set(SOURCES main.c)
+set(SOURCES main.cpp)
 
 add_executable(main_exe ${SOURCES})

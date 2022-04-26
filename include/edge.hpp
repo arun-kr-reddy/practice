@@ -1,12 +1,12 @@
 #pragma once
 
-#include "pgm.h"
+#include "pgm.hpp"
 
-void apply_edgeX(pgm_t *src_img, pgm_t *dst_img, uint8_t threshold) {
-    int width = src_img->width;
-    int height = src_img->height;
-    uint8_t *src_buff = src_img->ptr;
-    uint8_t *dst_buff = dst_img->ptr;
+void edgeX(pgm& src_img, pgm& dst_img, uint8_t threshold) {
+    int width = src_img.width();
+    int height = src_img.height();
+    uint8_t *src_ptr = src_img.ptr();
+    uint8_t *dst_ptr = dst_img.ptr();
 
     uint8_t k_size = 3;
     uint8_t k_half_size = (k_size - 1) / 2;
@@ -22,7 +22,7 @@ void apply_edgeX(pgm_t *src_img, pgm_t *dst_img, uint8_t threshold) {
                     // printf("%d %d %d %d\n", y, x, pos_y, pos_x);
                     if ((pos_x >= 0) && (pos_x < width) && (pos_y >= 0) &&
                         (pos_y < height)) {
-                        sum += src_buff[pos_y * width + pos_x] *
+                        sum += src_ptr[pos_y * width + pos_x] *
                                kernel[(k_y + k_half_size) * k_size +
                                       (k_x + k_half_size)];
                     }
@@ -30,16 +30,16 @@ void apply_edgeX(pgm_t *src_img, pgm_t *dst_img, uint8_t threshold) {
             }
             sum /= (k_size * 2);
             sum += 127;
-            dst_buff[y * width + x] = (sum > threshold) ? ((uint8_t)sum) : (0);
+            dst_ptr[y * width + x] = (sum > threshold) ? ((uint8_t)sum) : (0);
         }
     }
 }
 
-void apply_edgeY(pgm_t *src_img, pgm_t *dst_img, uint8_t threshold) {
-    int width = src_img->width;
-    int height = src_img->height;
-    uint8_t *src_buff = src_img->ptr;
-    uint8_t *dst_buff = dst_img->ptr;
+void edgeY(pgm& src_img, pgm& dst_img, uint8_t threshold) {
+    int width = src_img.width();
+    int height = src_img.height();
+    uint8_t *src_ptr = src_img.ptr();
+    uint8_t *dst_ptr = dst_img.ptr();
 
     uint8_t k_size = 3;
     uint8_t k_half_size = (k_size - 1) / 2;
@@ -55,7 +55,7 @@ void apply_edgeY(pgm_t *src_img, pgm_t *dst_img, uint8_t threshold) {
                     // printf("%d %d %d %d\n", y, x, pos_y, pos_x);
                     if ((pos_x >= 0) && (pos_x < width) && (pos_y >= 0) &&
                         (pos_y < height)) {
-                        sum += src_buff[pos_y * width + pos_x] *
+                        sum += src_ptr[pos_y * width + pos_x] *
                                kernel[(k_y + k_half_size) * k_size +
                                       (k_x + k_half_size)];
                     }
@@ -63,7 +63,7 @@ void apply_edgeY(pgm_t *src_img, pgm_t *dst_img, uint8_t threshold) {
             }
             sum /= (k_size * 2);
             sum += 127;
-            dst_buff[y * width + x] = (sum > threshold) ? ((uint8_t)sum) : (0);
+            dst_ptr[y * width + x] = (sum > threshold) ? ((uint8_t)sum) : (0);
         }
     }
 }
