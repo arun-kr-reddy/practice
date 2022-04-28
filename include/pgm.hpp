@@ -14,6 +14,7 @@ class pgm {
 
         char temp[3];
         fscanf(fp, "%s %d %d %d", temp, &this->_width, &this->_height, &this->_max_gray);
+        assert(strcmp(temp, "P5") == 0);
         fgetc(fp);
         this->_ptr = reinterpret_cast<uint8_t *>(malloc(this->_height * this->_width));
         fread(this->_ptr, this->_height * this->_width, 1, fp);
