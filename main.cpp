@@ -4,33 +4,35 @@
 #include "edge.hpp"
 #include "histogram.hpp"
 #include "pgm.hpp"
+#include "resize.hpp"
 
 int main(void) {
 
-    pgm src_pgm("../images/lenna.pgm");
+    pgm_t src_pgm("../images/lenna.pgm");
     src_pgm.write("./1.pgm");
     histogram(src_pgm);
     src_pgm.write("./2.pgm");
 
-    pgm blur_pgm = src_pgm;
+    pgm_t blur_pgm(src_pgm.width(), src_pgm.height());
 
-    blur(src_pgm, blur_pgm, 5);
+    blur(src_pgm, blur_pgm, 3, clamp);
     blur_pgm.write("./3.pgm");
 
-    pgm edgeX_pgm = blur_pgm;
-    edgeX(blur_pgm, edgeX_pgm, 132);
+    pgm_t edgeX_pgm(src_pgm.width(), src_pgm.height());
+    edgeX(blur_pgm, edgeX_pgm, clamp, 0);
     edgeX_pgm.write("./4.pgm");
 
-    pgm dst_pgm = blur_pgm;
-    edgeY(edgeX_pgm, dst_pgm, 132);
-    dst_pgm.write("./5.pgm");
+    pgm_t edgeY_pgm(src_pgm.width(), src_pgm.height());
+    edgeY(blur_pgm, edgeY_pgm, clamp, 0);
+    edgeY_pgm.write("./5.pgm");
 
-#if 0
-    apply_edgeX(&hist_pgm, &edgeX_pgm, 132);
-    pgm::writePGM("./3.pgm", &edgeX_pgm);
+    pgm_t dst_pgm(src_pgm.width(), src_pgm.height());
+    edgeRms(edgeX_pgm, edgeY_pgm, dst_pgm, 130);
+    dst_pgm.write("./6.pgm");
 
-    apply_edgeY(&edgeX_pgm, &dst_pgm, 132);
-    pgm::writePGM("./4.pgm", &dst_pgm);
-#endif
+    pgm_t rsz_pgm(1024, 1024);
+    resize(src_pgm, rsz_pgm, bilinear);
+    rsz_pgm.write("./7.pgm");
+
     return 0;
 }

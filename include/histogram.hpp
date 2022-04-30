@@ -7,7 +7,7 @@ static uint32_t s_cum_freq[255];
 static double s_cum_prob[255];
 static uint32_t s_num_samples;
 
-void calc_freq(pgm &img) {
+void calc_freq(pgm_t &img) {
     s_num_samples = img.width() * img.height();
     uint8_t *img_ptr = img.ptr();
     for (uint32_t i = 0; i < s_num_samples; i++) {
@@ -25,7 +25,7 @@ void calc_cum_freq() {
     }
 }
 
-void apply_hist_eq(pgm &img) {
+void apply_hist_eq(pgm_t &img) {
     uint8_t *img_ptr = img.ptr();
     for (uint32_t i = 0; i < s_num_samples; i++) {
         uint8_t val = *(img_ptr + i);
@@ -34,7 +34,7 @@ void apply_hist_eq(pgm &img) {
     }
 }
 
-void histogram(pgm &img) {
+void histogram(pgm_t &img) {
     memset(s_freq, 0, sizeof(s_freq));
     memset(s_cum_freq, 0, sizeof(s_cum_freq));
     calc_freq(img);

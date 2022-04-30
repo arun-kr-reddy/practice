@@ -1,8 +1,9 @@
 #pragma once
 
+#include "enums.hpp"
 #include "pgm.hpp"
 
-void blur(pgm &src_img, pgm &dst_img, uint8_t k_size) {
+void blur(pgm_t &src_img, pgm_t &dst_img, uint8_t k_size, edge_e edge) {
     int width = src_img.width();
     int height = src_img.height();
     uint8_t *src_ptr = src_img.ptr();
@@ -24,6 +25,36 @@ void blur(pgm &src_img, pgm &dst_img, uint8_t k_size) {
                     int pos_y = y + k_y;
                     int pos_x = x + k_x;
                     if ((pos_x >= 0) && (pos_x < width) && (pos_y >= 0) && (pos_y < height)) {
+                        sum += src_ptr[pos_y * width + pos_x] *
+                               kernel[(k_y + k_half_size) * k_size + (k_x + k_half_size)];
+                    } else if (edge == clamp) {
+                        if (pos_x < 0) {
+                            pos_x = 0;
+                        } else if (pos_x >= width) {
+                            pos_x = width - 1;
+                        }
+
+                        if (pos_y < 0) {
+                            pos_y = 0;
+                        } else if (pos_y >= height) {
+                            pos_y = height - 1;
+                        }
+
+                        sum += src_ptr[pos_y * width + pos_x] *
+                               kernel[(k_y + k_half_size) * k_size + (k_x + k_half_size)];
+                    } else if (edge == mirror) {
+                        if (pos_x < 0) {
+                            pos_x = -(pos_x);
+                        } else if (pos_x >= width) {
+                            pos_x = width - (pos_x - width) - 1;
+                        }
+
+                        if (pos_y < 0) {
+                            pos_y = -(pos_y);
+                        } else if (pos_y >= height) {
+                            pos_y = height - (pos_y - height) - 1;
+                        }
+
                         sum += src_ptr[pos_y * width + pos_x] *
                                kernel[(k_y + k_half_size) * k_size + (k_x + k_half_size)];
                     }

@@ -5,9 +5,9 @@
 #include <cstring>
 #include <string>
 
-class pgm {
+class pgm_t {
   public:
-    pgm(const std::string &filename) {
+    pgm_t(const std::string &filename) {
         FILE *fp;
         fp = fopen(filename.c_str(), "rb");
         assert(fp != NULL);
@@ -22,16 +22,23 @@ class pgm {
         fclose(fp);
     };
 
-    ~pgm() { free(this->_ptr); }
+    pgm_t(uint32_t width, uint32_t height) {
+        this->_height = height;
+        this->_width = width;
+        this->_max_gray = 255;
+        this->_ptr = reinterpret_cast<uint8_t *>(malloc(this->_height * this->_width));
+    };
 
-    pgm(pgm &other) {
+    ~pgm_t() { free(this->_ptr); }
+
+    pgm_t(pgm_t &other) {
         this->_width = other.width();
         this->_height = other.height();
         this->_max_gray = other.max_gray();
         this->_ptr = reinterpret_cast<uint8_t *>(malloc(this->_height * this->_width));
         memcpy(this->_ptr, other.ptr(), this->_height * this->_width);
     }
-    pgm &operator=(pgm &other) {
+    pgm_t &operator=(pgm_t &other) {
         this->_width = other.width();
         this->_height = other.height();
         this->_max_gray = other.max_gray();
