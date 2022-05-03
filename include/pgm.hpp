@@ -5,9 +5,11 @@
 #include <cstring>
 #include <string>
 
-class pgm_t {
+class pgm_t
+{
   public:
-    pgm_t(const std::string &filename) {
+    pgm_t(const std::string &filename)
+    {
         FILE *fp;
         fp = fopen(filename.c_str(), "rb");
         assert(fp != NULL);
@@ -22,7 +24,8 @@ class pgm_t {
         fclose(fp);
     };
 
-    pgm_t(uint32_t width, uint32_t height) {
+    pgm_t(uint32_t width, uint32_t height)
+    {
         this->_height = height;
         this->_width = width;
         this->_max_gray = 255;
@@ -31,14 +34,16 @@ class pgm_t {
 
     ~pgm_t() { free(this->_ptr); }
 
-    pgm_t(pgm_t &other) {
+    pgm_t(pgm_t &other)
+    {
         this->_width = other.width();
         this->_height = other.height();
         this->_max_gray = other.max_gray();
         this->_ptr = reinterpret_cast<uint8_t *>(malloc(this->_height * this->_width));
         memcpy(this->_ptr, other.ptr(), this->_height * this->_width);
     }
-    pgm_t &operator=(pgm_t &other) {
+    pgm_t &operator=(pgm_t &other)
+    {
         this->_width = other.width();
         this->_height = other.height();
         this->_max_gray = other.max_gray();
@@ -47,7 +52,8 @@ class pgm_t {
         return *this;
     }
 
-    void write(const std::string &filename) {
+    void write(const std::string &filename)
+    {
         FILE *fp;
         fp = fopen(filename.c_str(), "wb");
         assert(fp != NULL);

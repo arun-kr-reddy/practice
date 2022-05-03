@@ -145,6 +145,7 @@ CMakeFiles/main_exe.dir/main.cpp.o: /home/arun/Work/practice/main.cpp \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
  /usr/include/c++/11/bits/istream.tcc \
  /home/arun/Work/practice/include/blur.hpp \
+ /home/arun/Work/practice/include/convolution.hpp \
  /home/arun/Work/practice/include/enums.hpp \
  /home/arun/Work/practice/include/pgm.hpp /usr/include/c++/11/cassert \
  /usr/include/assert.h /usr/include/c++/11/cstring /usr/include/string.h \

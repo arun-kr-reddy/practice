@@ -2,7 +2,8 @@
 
 #include "enums.hpp"
 
-void resize(pgm_t &src_img, pgm_t &dst_img, resize_e method) {
+void resize(pgm_t &src_img, pgm_t &dst_img, resize_e method)
+{
     int src_width = src_img.width();
     int src_height = src_img.height();
     int dst_width = dst_img.width();
@@ -12,13 +13,18 @@ void resize(pgm_t &src_img, pgm_t &dst_img, resize_e method) {
 
     float scale_x = src_width / (float)dst_width;
     float scale_y = src_height / (float)dst_height;
-    for (uint32_t y = 0; y < dst_height; y++) {
-        for (uint32_t x = 0; x < dst_width; x++) {
-            if (method == nearest_neighbor) {
+    for (uint32_t y = 0; y < dst_height; y++)
+    {
+        for (uint32_t x = 0; x < dst_width; x++)
+        {
+            if (method == nearest_neighbor)
+            {
                 uint16_t x_nearest = (uint16_t)(x * scale_x);
                 uint16_t y_nearest = (uint16_t)(y * scale_y);
                 dst_ptr[y * dst_width + x] = src_ptr[y_nearest * src_width + x_nearest];
-            } else if (method == bilinear) {
+            }
+            else if (method == bilinear)
+            {
                 //  Q11      P1       Q12
                 //
                 //           P

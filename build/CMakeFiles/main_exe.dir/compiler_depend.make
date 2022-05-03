@@ -182,6 +182,7 @@ CMakeFiles/main_exe.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/istream \
   /usr/include/c++/11/bits/istream.tcc \
   ../include/blur.hpp \
+  ../include/convolution.hpp \
   ../include/enums.hpp \
   ../include/pgm.hpp \
   /usr/include/c++/11/cassert \
@@ -424,6 +425,8 @@ CMakeFiles/main_exe.dir/main.cpp.o: ../main.cpp \
 /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
+
+../include/convolution.hpp:
 
 /usr/include/x86_64-linux-gnu/bits/wordsize.h:
 
