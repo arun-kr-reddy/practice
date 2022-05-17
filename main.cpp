@@ -15,8 +15,8 @@ int main(void)
 
     pgm_t blur_pgm(src_pgm.width(), src_pgm.height());
 
-    // blur(src_pgm, blur_pgm, clamp);
-    // blur_pgm.write("./3.pgm");
+    blur(src_pgm, blur_pgm, clamp);
+    blur_pgm.write("./3.pgm");
 
     pgm_t edgeX_pgm(src_pgm.width(), src_pgm.height());
     edgeX(src_pgm, edgeX_pgm, clamp);

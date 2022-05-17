@@ -1,12 +1,19 @@
+#include <stdint.h>
 #include <stdio.h>
 
-#define macro_func(a, b) \
-        printf("val " #a " : %d, " #b " : %d\n", val##a, val##b)
+uint8_t twosComplement(uint8_t input)
+{
+    uint8_t temp = ~input;
+    temp += 1;
+
+    return temp;
+}
 
 int main(void)
 {
-    int val1 = 40;
-    int val2 = 30;
-    macro_func(1, 2);
+    uint8_t a = 253;
+    a+=4;
+    printf("%u\n", a);
+
     return 0;
-}
+} 
