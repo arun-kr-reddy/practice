@@ -7,6 +7,6 @@ include_directories(include)
 set(SOURCES main.cpp)
 add_executable(main_exe ${SOURCES})
 
-set(TEST_SOURCES test.cpp)
+set(TEST_SOURCES test.cpp test2.cpp)
 add_executable(test_exe ${TEST_SOURCES})
 target_link_libraries(test_exe pthread)
