@@ -190,30 +190,6 @@ test.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_exe.dir/build.make CMakeFiles/test_exe.dir/test.cpp.s
 .PHONY : test.cpp.s
 
-test2.o: test2.cpp.o
-.PHONY : test2.o
-
-# target to build an object file
-test2.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_exe.dir/build.make CMakeFiles/test_exe.dir/test2.cpp.o
-.PHONY : test2.cpp.o
-
-test2.i: test2.cpp.i
-.PHONY : test2.i
-
-# target to preprocess a source file
-test2.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_exe.dir/build.make CMakeFiles/test_exe.dir/test2.cpp.i
-.PHONY : test2.cpp.i
-
-test2.s: test2.cpp.s
-.PHONY : test2.s
-
-# target to generate assembly for a file
-test2.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_exe.dir/build.make CMakeFiles/test_exe.dir/test2.cpp.s
-.PHONY : test2.cpp.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -230,9 +206,6 @@ help:
 	@echo "... test.o"
 	@echo "... test.i"
 	@echo "... test.s"
-	@echo "... test2.o"
-	@echo "... test2.i"
-	@echo "... test2.s"
 .PHONY : help
 
 
