@@ -110,5 +110,8 @@ int main(void)
     }
     printf("\n");
 
+    fprintf(stderr, "error log\n");
+    fprintf(stdout, "out log\n");
+
     return 0;
 }
