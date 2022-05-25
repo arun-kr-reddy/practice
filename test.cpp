@@ -1,25 +1,28 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-typedef struct linked_list
-{
-    uint8_t value;
-    linked_list *next;
-} linked_list;
+const uint8_t MAX_SIZE = 10;
 
-void printLL(linked_list *head)
+typedef struct node
 {
-    linked_list *current = head;
+    uint8_t data;
+    node *next;
+} node;
+
+void printLL(node *head)
+{
+    node *current = head;
 
     while (current != NULL)
     {
-        printf("%d\n", current->value);
+        printf("%d\n", current->data);
         current = current->next;
     }
 }
 
-void deleteNode(linked_list *head, uint8_t idx)
+void deleteNode(node *head, uint8_t idx)
 {
     printf("idx %u\n", idx);
     head = NULL; // head->next;
@@ -28,13 +31,13 @@ void deleteNode(linked_list *head, uint8_t idx)
     if (idx == 0)
     {
         printf("inside");
-        head = NULL; // head->next;
+        head = head->next;
         return;
     }
 
     uint8_t i = 0;
-    linked_list *previous = NULL;
-    linked_list *current = head;
+    node *previous = NULL;
+    node *current = head;
     while (current != NULL)
     {
         previous = current;
@@ -48,22 +51,37 @@ void deleteNode(linked_list *head, uint8_t idx)
     }
 }
 
+void changePtr(int *num1, int *num2)
+{
+    num1 = num2;
+    return;
+}
+
 int main(void)
 {
-    linked_list head, middle, tail;
+    node *head = (node *)malloc(sizeof(node));
+    node *one = (node *)malloc(sizeof(node));
+    node *two = (node *)malloc(sizeof(node));
+    node *three = (node *)malloc(sizeof(node));
 
-    head.value = 10;
-    head.next = &middle;
+    one->data = 10;
+    one->next = two;
 
-    middle.value = 20;
-    middle.next = &tail;
+    two->data = 20;
+    two->next = three;
 
-    tail.value = 30;
-    tail.next = NULL;
+    three->data = 30;
+    three->next = NULL;
 
-    deleteNode(&head, 2);
-    printf("head %u\n", head.value);
-    printLL(&head);
+    head = one;
+
+    printLL(head);
+    deleteNode(head, 0);
+    printf("head %u\n", head->data);
+
+    int temp1 = 10, temp2 = 20;
+    changePtr(&temp1, &temp2);
+    printf("%d\n", temp1, temp2);
 
     return 0;
 }
