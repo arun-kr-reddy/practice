@@ -1,87 +1,69 @@
+#include <errno.h>
 #include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
-const uint8_t MAX_SIZE = 10;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+uint8_t g_arr[10] = {0};
+bool g_arr_filled = false;
 
-typedef struct node
+void *producer(void *arg)
 {
-    uint8_t data;
-    node *next;
-} node;
-
-void printLL(node *head)
-{
-    node *current = head;
-
-    while (current != NULL)
+    while (1)
     {
-        printf("%d\n", current->data);
-        current = current->next;
+        pthread_mutex_lock(&mutex);
+        for (int i = 0; i < 10; i++)
+        {
+            g_arr[i] = i * 10;
+        }
+        g_arr_filled = true;
+        pthread_mutex_unlock(&mutex);
+        pthread_cond_signal(&cond);
     }
 }
 
-void deleteNode(node *head, uint8_t idx)
+void *consumer(void *arg)
 {
-    printf("idx %u\n", idx);
-    head = NULL; // head->next;
-    return;
-
-    if (idx == 0)
+    while (1)
     {
-        printf("inside");
-        head = head->next;
-        return;
+        pthread_mutex_lock(&mutex);
+        while (g_arr_filled == false)
+        {
+            pthread_cond_wait(&cond, &mutex);
+        }
+        for (int i = 0; i < 10; i++)
+        {
+            printf("%d\n", g_arr[i]);
+        }
+        g_arr_filled = false;
+        sleep(1);
+        pthread_mutex_unlock(&mutex);
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    pthread_t th[2];
+
+    if (pthread_create(&th[0], NULL, &producer, NULL) != 0)
+    {
+        perror("Failed to create thread");
+    }
+    if (pthread_create(&th[1], NULL, &consumer, NULL) != 0)
+    {
+        perror("Failed to create thread");
     }
 
-    uint8_t i = 0;
-    node *previous = NULL;
-    node *current = head;
-    while (current != NULL)
+    for (int i = 0; i < 2; i++)
     {
-        previous = current;
-        current = current->next;
-        ++i;
-        if (i == idx)
+        if (pthread_join(th[i], NULL) != 0)
         {
-            previous->next = current->next;
-            return;
+            perror("Failed to join thread");
         }
     }
-}
-
-void changePtr(int *num1, int *num2)
-{
-    num1 = num2;
-    return;
-}
-
-int main(void)
-{
-    node *head = (node *)malloc(sizeof(node));
-    node *one = (node *)malloc(sizeof(node));
-    node *two = (node *)malloc(sizeof(node));
-    node *three = (node *)malloc(sizeof(node));
-
-    one->data = 10;
-    one->next = two;
-
-    two->data = 20;
-    two->next = three;
-
-    three->data = 30;
-    three->next = NULL;
-
-    head = one;
-
-    printLL(head);
-    deleteNode(head, 0);
-    printf("head %u\n", head->data);
-
-    int temp1 = 10, temp2 = 20;
-    changePtr(&temp1, &temp2);
-    printf("%d\n", temp1, temp2);
 
     return 0;
 }
