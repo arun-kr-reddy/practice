@@ -1,0 +1,7 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/arun/Work/practice'
+echo "file not found"
+g++ -g -O3   -c -o test.o test.cpp
+g++ test.o -o test_exe
+make: Leaving directory '/home/arun/Work/practice'
+ 

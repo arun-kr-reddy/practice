@@ -1,27 +1,31 @@
-#include <errno.h>
-#include <pthread.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+#include <assert.h>
+#include <pthread.h>
 #include <unistd.h>
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
-uint8_t g_arr[10] = {0};
-bool g_arr_filled = false;
+pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t g_cond = PTHREAD_COND_INITIALIZER;
+uint8_t g_counter = 0;
+bool g_count_updated = false;
 
 void *producer(void *arg)
 {
     while (1)
     {
-        pthread_mutex_lock(&mutex);
-        for (int i = 0; i < 10; i++)
+        pthread_mutex_lock(&g_mutex);
+        while(g_count_updated == true)
         {
-            g_arr[i] = i * 10;
+            pthread_cond_wait(&g_cond, &g_mutex);
         }
-        g_arr_filled = true;
-        pthread_mutex_unlock(&mutex);
-        pthread_cond_signal(&cond);
+        ++g_counter;
+        printf("%u produced\n", g_counter);
+        g_count_updated = true;
+        pthread_mutex_unlock(&g_mutex);
+        pthread_cond_signal(&g_cond);
     }
 }
 
@@ -29,41 +33,33 @@ void *consumer(void *arg)
 {
     while (1)
     {
-        pthread_mutex_lock(&mutex);
-        while (g_arr_filled == false)
+        pthread_mutex_lock(&g_mutex);
+        while(g_count_updated == false)
         {
-            pthread_cond_wait(&cond, &mutex);
+            pthread_cond_wait(&g_cond, &g_mutex);
         }
-        for (int i = 0; i < 10; i++)
-        {
-            printf("%d\n", g_arr[i]);
-        }
-        g_arr_filled = false;
-        sleep(1);
-        pthread_mutex_unlock(&mutex);
+        printf("%u received\n", g_counter);
+        g_count_updated = false;
+        pthread_mutex_unlock(&g_mutex);
+        pthread_cond_signal(&g_cond);
     }
 }
 
-int main(int argc, char *argv[])
+int main()
 {
-    pthread_t th[2];
+    pthread_t thread1, thread2;
 
-    if (pthread_create(&th[0], NULL, &producer, NULL) != 0)
-    {
-        perror("Failed to create thread");
-    }
-    if (pthread_create(&th[1], NULL, &consumer, NULL) != 0)
-    {
-        perror("Failed to create thread");
-    }
+    // assert(pthread_create(&thread1, NULL, producer, NULL) == 0);
+    // assert(pthread_create(&thread2, NULL, consumer, NULL) == 0);
 
-    for (int i = 0; i < 2; i++)
-    {
-        if (pthread_join(th[i], NULL) != 0)
-        {
-            perror("Failed to join thread");
-        }
-    }
+    // assert(pthread_join(thread1, NULL) == 0);
+    // assert(pthread_join(thread2, NULL) == 0);
+
+    int a = 10;
+    int b = 20;
+    int *c = (int *)malloc(4);
+    int *d = (int *)malloc(4);
+    printf("%p %p %p %p\n", &a, &b, c, d);
 
     return 0;
 }
