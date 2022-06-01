@@ -44,7 +44,7 @@ void *consumer(void *arg)
         pthread_cond_signal(&g_cond);
     }
 }
-
+enum temp {e_a=10 , e_b, e_c};
 int main()
 {
     pthread_t thread1, thread2;
@@ -60,6 +60,7 @@ int main()
     int *c = (int *)malloc(4);
     int *d = (int *)malloc(4);
     printf("%p %p %p %p\n", &a, &b, c, d);
+    printf("%d %d %d\n", e_a, e_b, e_c);
 
     return 0;
 }
