@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/arun/Work/practice/include
+CXX_INCLUDES = -I/home/arun/Work/github_workspace/practice/include
 
 CXX_FLAGS = 
 

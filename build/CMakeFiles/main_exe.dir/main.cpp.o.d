@@ -1,4 +1,5 @@
-CMakeFiles/main_exe.dir/main.cpp.o: /home/arun/Work/practice/main.cpp \
+CMakeFiles/main_exe.dir/main.cpp.o: \
+ /home/arun/Work/github_workspace/practice/main.cpp \
  /usr/include/stdc-predef.h /usr/include/c++/11/iostream \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
@@ -144,12 +145,13 @@ CMakeFiles/main_exe.dir/main.cpp.o: /home/arun/Work/practice/main.cpp \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
  /usr/include/c++/11/bits/istream.tcc \
- /home/arun/Work/practice/include/blur.hpp \
- /home/arun/Work/practice/include/convolution.hpp \
- /home/arun/Work/practice/include/enums.hpp \
- /home/arun/Work/practice/include/pgm.hpp /usr/include/c++/11/cassert \
- /usr/include/assert.h /usr/include/c++/11/cstring /usr/include/string.h \
- /usr/include/strings.h /home/arun/Work/practice/include/edge.hpp \
+ /home/arun/Work/github_workspace/practice/include/blur.hpp \
+ /home/arun/Work/github_workspace/practice/include/convolution.hpp \
+ /home/arun/Work/github_workspace/practice/include/enums.hpp \
+ /home/arun/Work/github_workspace/practice/include/pgm.hpp \
+ /usr/include/c++/11/cassert /usr/include/assert.h \
+ /usr/include/c++/11/cstring /usr/include/string.h /usr/include/strings.h \
+ /home/arun/Work/github_workspace/practice/include/edge.hpp \
  /usr/include/c++/11/cmath /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/math-vector.h \
  /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
@@ -173,5 +175,5 @@ CMakeFiles/main_exe.dir/main.cpp.o: /home/arun/Work/practice/main.cpp \
  /usr/include/c++/11/tr1/poly_hermite.tcc \
  /usr/include/c++/11/tr1/poly_laguerre.tcc \
  /usr/include/c++/11/tr1/riemann_zeta.tcc \
- /home/arun/Work/practice/include/histogram.hpp \
- /home/arun/Work/practice/include/resize.hpp
+ /home/arun/Work/github_workspace/practice/include/histogram.hpp \
+ /home/arun/Work/github_workspace/practice/include/resize.hpp

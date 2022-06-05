@@ -62,5 +62,7 @@ int main()
     printf("%p %p %p %p\n", &a, &b, c, d);
     printf("%d %d %d\n", e_a, e_b, e_c);
 
+    printf("size %d\n", sizeof(c));
+
     return 0;
 }
