@@ -21,7 +21,6 @@ CMakeFiles/test_exe.dir/test.cpp.obj: ../test.cpp \
   C:/MinGW/include/string.h \
   C:/MinGW/include/strings.h \
   C:/MinGW/include/wchar.h \
-  C:/MinGW/include/assert.h \
   C:/MinGW/include/unistd.h \
   C:/MinGW/include/io.h \
   C:/MinGW/include/sys/types.h \
@@ -71,8 +70,6 @@ C:/MinGW/include/strings.h:
 C:/MinGW/include/process.h:
 
 C:/MinGW/include/wchar.h:
-
-C:/MinGW/include/assert.h:
 
 C:/MinGW/include/unistd.h:
 
