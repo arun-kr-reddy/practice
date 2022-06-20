@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/Users/arunk/OneDrive/Documents/Work/practice/test.cpp" "CMakeFiles/test_exe.dir/test.cpp.obj" "gcc" "CMakeFiles/test_exe.dir/test.cpp.obj.d"
+  "/home/arun/Work/practice/test.cpp" "CMakeFiles/test_exe.dir/test.cpp.o" "gcc" "CMakeFiles/test_exe.dir/test.cpp.o.d"
   )
 
 # Targets to which this target links.
