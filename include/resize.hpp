@@ -2,14 +2,15 @@
 
 #include "enums.hpp"
 
-void resize(pgm_t &src_img, pgm_t &dst_img, resize_e method)
+void
+resize (pgm_t &src_img, pgm_t &dst_img, resize_e method)
 {
-    int src_width = src_img.width();
-    int src_height = src_img.height();
-    int dst_width = dst_img.width();
-    int dst_height = dst_img.height();
-    uint8_t *src_ptr = src_img.ptr();
-    uint8_t *dst_ptr = dst_img.ptr();
+    int src_width = src_img.width ();
+    int src_height = src_img.height ();
+    int dst_width = dst_img.width ();
+    int dst_height = dst_img.height ();
+    uint8_t *src_ptr = src_img.ptr ();
+    uint8_t *dst_ptr = dst_img.ptr ();
 
     float scale_x = src_width / (float)dst_width;
     float scale_y = src_height / (float)dst_height;
@@ -21,7 +22,8 @@ void resize(pgm_t &src_img, pgm_t &dst_img, resize_e method)
             {
                 uint16_t x_nearest = (uint16_t)(x * scale_x);
                 uint16_t y_nearest = (uint16_t)(y * scale_y);
-                dst_ptr[y * dst_width + x] = src_ptr[y_nearest * src_width + x_nearest];
+                dst_ptr[y * dst_width + x]
+                    = src_ptr[y_nearest * src_width + x_nearest];
             }
             else if (method == bilinear)
             {

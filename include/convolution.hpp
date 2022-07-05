@@ -3,13 +3,14 @@
 #include "enums.hpp"
 #include "pgm.hpp"
 
-void convolve(pgm_t &src_img, pgm_t &dst_img, const int8_t *kernel, uint8_t k_size,
-              const int16_t div_factor, edge_e edge)
+void
+convolve (pgm_t &src_img, pgm_t &dst_img, const int8_t *kernel, uint8_t k_size,
+          const int16_t div_factor, edge_e edge)
 {
-    int width = src_img.width();
-    int height = src_img.height();
-    uint8_t *src_ptr = src_img.ptr();
-    uint8_t *dst_ptr = dst_img.ptr();
+    int width = src_img.width ();
+    int height = src_img.height ();
+    uint8_t *src_ptr = src_img.ptr ();
+    uint8_t *dst_ptr = dst_img.ptr ();
 
     uint8_t k_half_size = (k_size - 1) / 2;
 
@@ -24,10 +25,12 @@ void convolve(pgm_t &src_img, pgm_t &dst_img, const int8_t *kernel, uint8_t k_si
                 {
                     int pos_y = y + k_y;
                     int pos_x = x + k_x;
-                    if ((pos_x >= 0) && (pos_x < width) && (pos_y >= 0) && (pos_y < height))
+                    if ((pos_x >= 0) && (pos_x < width) && (pos_y >= 0)
+                        && (pos_y < height))
                     {
-                        sum += src_ptr[pos_y * width + pos_x] *
-                               kernel[(k_y + k_half_size) * k_size + (k_x + k_half_size)];
+                        sum += src_ptr[pos_y * width + pos_x]
+                               * kernel[(k_y + k_half_size) * k_size
+                                        + (k_x + k_half_size)];
                     }
                     else if (edge == clamp)
                     {
@@ -49,8 +52,9 @@ void convolve(pgm_t &src_img, pgm_t &dst_img, const int8_t *kernel, uint8_t k_si
                             pos_y = height - 1;
                         }
 
-                        sum += src_ptr[pos_y * width + pos_x] *
-                               kernel[(k_y + k_half_size) * k_size + (k_x + k_half_size)];
+                        sum += src_ptr[pos_y * width + pos_x]
+                               * kernel[(k_y + k_half_size) * k_size
+                                        + (k_x + k_half_size)];
                     }
                     else if (edge == mirror)
                     {
@@ -72,12 +76,13 @@ void convolve(pgm_t &src_img, pgm_t &dst_img, const int8_t *kernel, uint8_t k_si
                             pos_y = height - (pos_y - height) - 1;
                         }
 
-                        sum += src_ptr[pos_y * width + pos_x] *
-                               kernel[(k_y + k_half_size) * k_size + (k_x + k_half_size)];
+                        sum += src_ptr[pos_y * width + pos_x]
+                               * kernel[(k_y + k_half_size) * k_size
+                                        + (k_x + k_half_size)];
                     }
                 }
             }
-            dst_ptr[y * width + x] = (uint8_t)(abs(sum / div_factor));
+            dst_ptr[y * width + x] = (uint8_t)(abs (sum / div_factor));
         }
     }
 }
