@@ -1,37 +1,45 @@
-#include <sstream>
+#include <iostream>
 
-#include "common_defs.h"
-#include "map"
+#include "blur.hpp"
+#include "edge.hpp"
+#include "histogram.hpp"
+#include "ocl.hpp"
+#include "pgm.hpp"
+#include "resize.hpp"
 
-int main(void)
+int main(int argc, char const *argv[])
 {
-    std::map<int, int> mp;
+#if 1
+    //assert(argc == 2);
+    //std::string input_filename = std::string(argv[1]);
+    std::string input_filename = "./lenna.pgm";
+    pgm_t src_pgm(input_filename);
+    src_pgm.write("./1.pgm");
+    histogram(src_pgm);
+    src_pgm.write("./2.pgm");
 
-    mp[10] = 20;
-    mp[30] = 60;
-    mp.insert({30, 70});
+    pgm_t blur_pgm(src_pgm.width(), src_pgm.height());
 
-    auto posItr = mp.find(40);
+    blur(src_pgm, blur_pgm, clamp);
+    blur_pgm.write("./3.pgm");
 
-    if (mp.count(40) > 0)
-    {
-        std::cout << "yes" << std::endl;
-    }
-    else
-    {
-        std::cout << "no" << std::endl;
-    }
+    pgm_t edgeX_pgm(src_pgm.width(), src_pgm.height());
+    edgeX(src_pgm, edgeX_pgm, clamp);
+    edgeX_pgm.write("./4.pgm");
 
-    // create string
-    std::stringstream out_sstream;
-    out_sstream << "pi" << 3.14;
-    std::string str_out = out_sstream.str();
-    std::cout << str_out << std::endl;  // pi: 3.14
+    pgm_t edgeY_pgm(src_pgm.width(), src_pgm.height());
+    edgeY(src_pgm, edgeY_pgm, clamp);
+    edgeY_pgm.write("./5.pgm");
 
-    std::stringstream in_sstream(str_out);
-    std::string str;
-    float val;
-    in_sstream >> str >> val;  // str: 'pi ', val: 3.14
+    pgm_t dst_pgm(src_pgm.width(), src_pgm.height());
+    edgeRms(edgeX_pgm, edgeY_pgm, dst_pgm, 0);
+    dst_pgm.write("./6.pgm");
 
+    pgm_t rsz_pgm(1024, 1024);
+    resize(src_pgm, rsz_pgm, bilinear);
+    rsz_pgm.write("./7.pgm");
+#else
+    matrix_multiplication();
+#endif
     return 0;
 }
