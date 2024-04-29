@@ -1,64 +1,124 @@
 // includes
-#include <algorithm>
-#include <cstdbool>
-#include <ctime>
-#include <iostream>
-#include <vector>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 // macros
-#define MAX_INPUT_SIZE 100
+#define MAX_INPUT_SIZE 1000000
+#define MAX_VALUE 100
 
-// using
-using std::cout;
-using std::endl;
-using std::vector;
+#define ERROR -1
+
+#define DBG 0
 
 // global
 
 // function prototypes
-uint32_t fillRandomNumbers(std::vector<uint32_t> &vec);
-uint32_t findPeak(std::vector<uint32_t> input);
+void fillRandomNumbers(uint32_t* arr, size_t size);
+void printArray1D(uint32_t* arr, size_t size);
+
+uint32_t findPeak1D_1(uint32_t* arr, size_t size);
+uint32_t findPeak1D_2(uint32_t* arr, size_t size);
 
 // functions
 int main()
 {
-    vector<uint32_t> input(MAX_INPUT_SIZE);
-    fillRandomNumbers(input);
+    uint32_t* input = (uint32_t*)malloc(MAX_INPUT_SIZE * sizeof(uint32_t));
+    uint32_t peak = ERROR;
 
-    findPeak(input);
+    fillRandomNumbers(input, MAX_INPUT_SIZE);
 
-    return 0;
-}
+#if DBG
+    printf("input array:\n");
+    printArray1D(input, MAX_INPUT_SIZE);
+#endif
 
-uint32_t fillRandomNumbers(vector<uint32_t> &vec)
-{
-    for (uint32_t i = 0; i < vec.size(); ++i)
+    peak = findPeak1D_1(input, MAX_INPUT_SIZE);
+    if (peak != ERROR)
     {
-        vec.at(i) = 1;  // rand();
-    }
-
-    return 0;
-}
-
-uint32_t findPeak(std::vector<uint32_t> input)
-{
-    uint32_t half_size = input.size() / 2;
-    if (input.at(half_size - 1) > input.at(half_size))
-    {
-        std::vector<uint32_t> new_input{input.begin(),
-                                        input.begin() + half_size};
-        findPeak(new_input);
-    }
-    else if (input.at(half_size + 1) > input.at(half_size))
-    {
-        std::vector<uint32_t> new_input{input.begin() + half_size, input.end()};
-        findPeak(new_input);
+        printf("peak: %d\n", peak);
     }
     else
     {
-        cout << input.at(half_size - 1) << " " << input.at(half_size) << " "
-             << input.at(half_size + 1) << " " << endl;
+        printf("no peak \n");
+    }
+
+    peak = findPeak1D_2(input, MAX_INPUT_SIZE);
+    if (peak != ERROR)
+    {
+        printf("peak: %d\n", peak);
+    }
+    else
+    {
+        printf("no peak \n");
     }
 
     return 0;
+}
+
+void fillRandomNumbers(uint32_t* arr, size_t size)
+{
+    for (uint32_t i = 0; i < size; ++i)
+    {
+        arr[i] = rand() % MAX_VALUE;
+    }
+
+    return;
+}
+
+void printArray1D(uint32_t* arr, size_t size)
+{
+    for (uint32_t i = 0; i < size; ++i)
+    {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+uint32_t findPeak1D_1(uint32_t* arr, size_t size)
+{
+    if (arr[0] > arr[1])
+        return arr[0];
+    else if (arr[size - 1] > arr[size - 2])
+        return arr[size - 1];
+
+    for (int i = 1; i < size - 2; ++i)
+    {
+        if ((arr[i] >= arr[i - 1]) && (arr[i] >= arr[i + 1])) return arr[i];
+    }
+
+    return ERROR;
+}
+
+uint32_t findPeak1D_2(uint32_t* arr, size_t size)
+{
+    size_t half_size = size / 2;
+    size_t new_start = 0;
+    size_t new_end = size;
+
+#if DBG
+    printArray1D(arr, size);
+#endif
+
+    if (size > 1)
+    {
+        if (arr[half_size - 1] > arr[half_size])
+        {
+            new_end = half_size;
+        }
+        else if (arr[half_size + 1] > arr[half_size])
+        {
+            new_start = half_size;
+        }
+        else
+        {
+            return arr[half_size];
+        }
+    }
+    else
+    {
+        return ERROR;
+    }
+
+    return (findPeak1D_2(arr + new_start, new_end - new_start));
 }
