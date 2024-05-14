@@ -35,7 +35,7 @@ int main(int argc, char const *argv[])
     edgeRms(edgeX_pgm, edgeY_pgm, dst_pgm, 0);
     dst_pgm.write("./6_edgeRMS.pgm");
 
-    pgm_t rsz_pgm(1024, 1024);
+	pgm_t rsz_pgm(1024, 1024);
     resize(src_pgm, rsz_pgm, bilinear);
     rsz_pgm.write("./7_resize.pgm");
 #else

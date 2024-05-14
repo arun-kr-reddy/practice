@@ -1,4 +1,4 @@
-# readme
+# README
 - [build](#build)
 
 ## build
