@@ -1,0 +1,9 @@
+﻿BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 0
+UseTab: Never
+BreakBeforeBraces: Allman
+AccessModifierOffset: -2
+IndentPPDirectives: BeforeHash
+AlignConsecutiveAssignments: true
+AlignTrailingComments : true
