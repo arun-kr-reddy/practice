@@ -6,4 +6,5 @@ BreakBeforeBraces: Allman
 AccessModifierOffset: -2
 IndentPPDirectives: BeforeHash
 AlignConsecutiveAssignments: true
-AlignTrailingComments : true
+AlignTrailingComments: true
+AlignConsecutiveMacros: true

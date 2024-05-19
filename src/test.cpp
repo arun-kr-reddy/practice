@@ -1,13 +1,17 @@
 // ************************************************
 // INCLUDES
 // ************************************************
-#include "dsa.h"
 #include "peak_finding.h"
+#include <algorithm>
+#include <iomanip>
+#include <vector>
 
 // ************************************************
 // MACROS
 // ************************************************
-#define MAX_INPUT_SIZE_PEAKFINDING 5
+#define MAX_INPUT_SIZE_PEAKFINDING 10U
+#define TABLE_WIDTH                4U
+
 // ************************************************
 // TYPEDEF & ENUMS
 // ************************************************
@@ -15,56 +19,96 @@
 // ************************************************
 // FUNCTION DECLARATIONS
 // ************************************************
-void peakFinding();
+void peakFinding1D();
+void peakFinding2D();
 
 // ************************************************
 // FUNCTION DEFINITIONS
 // ************************************************
 int main()
 {
-    peakFinding();
+    cout << "=========================== 1D ===========================" << endl;
+    peakFinding1D();
+    cout << "==========================================================" << endl;
+
+    cout << "=========================== 2D ===========================" << endl;
+    peakFinding2D();
+    cout << "==========================================================" << endl;
+
     return 0;
 }
 
-void peakFinding()
+void peakFinding1D()
 {
-    int32_t peak;
+    uint32_t peak;
 
-    LOG("=========================== 1D ===========================\n");
+    vector<uint32_t> input(MAX_INPUT_SIZE_PEAKFINDING);
 
-    uint32_t size   = MAX_INPUT_SIZE_PEAKFINDING;
-    uint32_t *input = (uint32_t *)malloc(size * sizeof(uint32_t));
+    std::srand(unsigned(std::time(nullptr)));
+    std::generate(input.begin(), input.end(), rand_bounded);
+    for (size_t i = 0; i < input.size(); i++)
+    {
+        std::cout << std::setw(TABLE_WIDTH);
+        cout << input.at(i) << " ";
+    }
+    cout << endl;
 
-    fillArray(input, size);
-
-    LOG("input array:\n");
-    printArray(input, size);
-
-    peak = find1DPeakStraightforward(input, size);
+    peak = find1DPeakStraightforward(input);
     if (peak != NOT_FOUND)
     {
-        LOG("straightforward peak: %d\n", peak);
+        cout << "straight forward peak: " << peak << endl;
     }
 
-    peak = find1DPeakDivideConquer(input, size);
+    peak = find1DPeakDivideConquer(input);
     if (peak != NOT_FOUND)
     {
-        LOG("divide conquer peak: %d\n", peak);
+        cout << "divide conquer peak: " << peak << endl;
+    }
+}
+
+void peakFinding2D()
+{
+    uint32_t peak;
+
+    vector<vector<uint32_t>> input(MAX_INPUT_SIZE_PEAKFINDING, vector<uint32_t>(MAX_INPUT_SIZE_PEAKFINDING));
+
+    std::srand(unsigned(std::time(nullptr)));
+    for (size_t row = 0; row < input.size(); row++)
+    {
+        std::generate(input.at(row).begin(), input.at(row).end(), rand_bounded);
+        for (size_t col = 0; col < input.at(row).size(); col++)
+        {
+            std::cout << std::setw(TABLE_WIDTH);
+            cout << input.at(row).at(col) << " ";
+        }
+        cout << endl;
     }
 
-    LOG("=========================== 2D ===========================\n");
+    peak = find2DPeakGreedyAscent(input);
+    if (peak != NOT_FOUND)
+    {
+        cout << "greedy ascent peak: " << peak << endl;
+    }
 
-    point2d_t size2d  = {MAX_INPUT_SIZE_PEAKFINDING, MAX_INPUT_SIZE_PEAKFINDING};
-    uint32_t *input2d = (uint32_t *)malloc(size2d.x * size2d.y * sizeof(uint32_t));
+    peak = find2DPeakDivideConquer(input);
+    if (peak != NOT_FOUND)
+    {
+        cout << "greedy ascent peak: " << peak << endl;
+    }
+}
 
-    fillMatrix(input2d, size2d);
-
-    LOG("input matrix:\n");
-    printMatrix(input2d, size2d);
+#if 0
 
     peak = find2DPeakGreedyAscent(input2d, size2d);
     if (peak != NOT_FOUND)
     {
         LOG("greedy ascent peak: %d\n", peak);
     }
-}
+
+    peak = find2DPeakDivideConquer(input2d, size2d, {0, 0});
+    if (peak != NOT_FOUND)
+    {
+        LOG("divide conquer peak: %d\n", peak);
+    }
+    free(input2d);
+#endif

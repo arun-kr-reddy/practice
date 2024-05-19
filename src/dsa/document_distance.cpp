@@ -1,12 +1,13 @@
+#if 0
 // ************************************************
 // PRAGMAS
 // ************************************************
-#pragma once
+    #pragma once
 
 // ************************************************
 // INCLUDES
 // ************************************************
-#include "dsa.h"
+    #include "document_distance.h"
 
 // ************************************************
 // MACROS
@@ -22,6 +23,8 @@
 int32_t find1DPeakStraightforward(uint32_t *arr, size_t size);
 int32_t find1DPeakDivideConquer(uint32_t *arr, size_t size);
 int32_t find2DPeakGreedyAscent(uint32_t *arr, point2d_t size);
+int32_t find2DPeakDivideConquer(uint32_t *arr, point2d_t size, point2d_t position);
+point2d_t findMatrixColumnMax(uint32_t *arr, point2d_t size, point2d_t position);
 
 // ************************************************
 // FUNCTION DEFINITIONS
@@ -145,24 +148,37 @@ int32_t find2DPeakGreedyAscent(uint32_t *arr, point2d_t size)
     return NOT_FOUND;
 }
 
-int32_t find2DPeakDivideConquer(uint32_t *arr, point2d_t size, point2d_t start_position)
+int32_t find2DPeakDivideConquer(uint32_t *arr, point2d_t size, point2d_t position)
 {
-    point2d_t position = {(start_position.x + size.x) / 2, (start_position.y + size.y) / 2};
-    point2d_t max;
-    int32_t peak = INVALID;
+    point2d_t new_position = {(position.x + size.x) / 2, (position.y + size.y) / 2};
+    int32_t peak           = INVALID;
 
     if (size.x > 1 && size.y > 1)
     {
-        max = findMatrixColumnMax(arr, size);
+        new_position = findMatrixColumnMax(arr, size, new_position);
+        LOG("max in column %d is %d\n", new_position.y, arr[new_position.x * size.y + new_position.y]);
+
+        return find1DPeakDivideConquer(arr + new_position.x * size.y, size.y);
     }
     else
     {
         return NOT_FOUND;
     }
 
-    return find1DPeakDivideConquer(arr + max, max.y);
+    return NOT_FOUND;
 }
 
-point2d_t findMatrixColumnMax(uint32_t *arr, point2d_t size)
+point2d_t findMatrixColumnMax(uint32_t *arr, point2d_t size, point2d_t position)
 {
+    uint32_t *base         = arr + position.y;
+    point2d_t max_position = {0, position.y};
+    for (int32_t i = 1; i < size.x; i++)
+    {
+        if (base[i * size.y] > base[max_position.x * size.y])
+        {
+            max_position.x = i;
+        }
+    }
+    return max_position;
 }
+#endif
