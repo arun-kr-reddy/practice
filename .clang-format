@@ -8,3 +8,4 @@ IndentPPDirectives: BeforeHash
 AlignConsecutiveAssignments: true
 AlignTrailingComments: true
 AlignConsecutiveMacros: true
+SpacesBeforeTrailingComments: 4

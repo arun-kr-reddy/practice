@@ -6,10 +6,8 @@
 // ************************************************
 // INCLUDES
 // ************************************************
-#include <cstdint>
-#include <iomanip>
-#include <iostream>
-#include <vector>
+#include <stdint.h>
+#include <stdio.h>
 
 // ************************************************
 // MACROS
@@ -18,15 +16,24 @@
 // ************************************************
 // TYPEDEF & ENUMS
 // ************************************************
-using std::cout;
-using std::endl;
-using std::vector;
+typedef struct
+{
+    int32_t row;
+    int32_t col;
+} point2d_t;
 
 typedef struct
 {
-    int32_t x;
-    int32_t y;
-} point2d_t;
+    uint8_t *addr;
+    uint32_t size;
+} array_t;
+
+typedef struct
+{
+    uint8_t *addr;
+    uint32_t width;
+    uint32_t height;
+} matrix_t;
 
 typedef enum
 {
@@ -42,8 +49,11 @@ typedef enum
 // ************************************************
 // FUNCTION DECLARATIONS
 // ************************************************
-uint32_t rand_bounded();
-uint32_t find1DPeakStraightforward(vector<uint32_t> input);
-uint32_t find1DPeakDivideConquer(vector<uint32_t> input);
-uint32_t find2DPeakGreedyAscent(vector<vector<uint32_t>> input);
-uint32_t find2DPeakDivideConquer(vector<vector<uint32_t>> input);
+void fillArray(array_t arr);
+void printArray(array_t arr);
+uint32_t find1DPeakStraightforward(array_t arr);
+uint32_t find1DPeakDivideConquer(array_t array);
+void fillMatrix(matrix_t array);
+void printMatrix(matrix_t array);
+uint32_t find2DPeakGreedyAscent(matrix_t matrix);
+uint32_t find2DPeakDivideConquer(matrix_t matrix);

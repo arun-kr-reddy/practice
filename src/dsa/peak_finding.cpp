@@ -7,14 +7,13 @@
 // INCLUDES
 // ************************************************
 #include "peak_finding.h"
-#include <algorithm>
-#include <cstdlib>
-#include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 // ************************************************
 // MACROS
 // ************************************************
-#define RAND_BOUND_MAX 255U
+#define RAND_MAX 50U
 // ************************************************
 // TYPEDEF & ENUMS
 // ************************************************
@@ -22,36 +21,49 @@
 // ************************************************
 // FUNCTION DECLARATIONS
 // ************************************************
-static point2d_t findMatrixColumnMax(vector<vector<uint32_t>> input, point2d_t position);
+static uint32_t findMatrixColumnMax(matrix_t matrix, uint32_t col);
 
 // ************************************************
 // FUNCTION DEFINITIONS
 // ************************************************
-uint32_t rand_bounded()
+void fillArray(array_t array)
 {
-    return (std::rand() % RAND_BOUND_MAX);
+    srand(time(NULL));
+    for (size_t i = 0; i < array.size; i++)
+    {
+        array.addr[i] = rand() % RAND_MAX;
+    }
 }
 
-uint32_t find1DPeakStraightforward(vector<uint32_t> input)
+void printArray(array_t array)
 {
-    size_t size = input.size();
+    for (size_t i = 0; i < array.size; i++)
+    {
+        printf("%4d ", array.addr[i]);
+    }
+    printf("\n");
+}
+
+uint32_t find1DPeakStraightforward(array_t array)
+{
+    printArray(array);
 
     // check first & last elements first
-    if (input.at(0) > input.at(1))
+    if (array.addr[0] > array.addr[1])
     {
-        return input.at(0);
+        return array.addr[0];
     }
-    else if (input.at(size - 1) > input.at(size - 2))
+    else if (array.addr[array.size - 1] > array.addr[array.size - 2])
     {
-        return input.at(size - 1);
+        return array.addr[array.size - 1];
     }
 
     // check remaining ones
-    for (size_t i = 1; i < size - 2; ++i)
+    for (int i = 1; i < array.size - 2; ++i)
     {
-        uint32_t left_value   = input.at(i - 1);
-        uint32_t centre_value = input.at(i);
-        uint32_t right_value  = input.at(i + 1);
+        uint32_t left_value   = array.addr[i - 1];
+        uint32_t centre_value = array.addr[i];
+        uint32_t right_value  = array.addr[i + 1];
 
         if ((centre_value >= left_value) && (centre_value >= right_value))
         {
@@ -62,48 +74,41 @@ uint32_t find1DPeakStraightforward(vector<uint32_t> input)
     return NOT_FOUND;
 }
 
-uint32_t find1DPeakDivideConquer(vector<uint32_t> input)
+uint32_t find1DPeakDivideConquer(array_t array)
 {
-    size_t size = input.size();
-
-    size_t midpoint  = size / 2;
+    size_t midpoint  = array.size / 2;
     size_t new_start = 0;
-    size_t new_end   = size;
+    size_t new_end   = array.size;
+
+    printArray(array);
 
     // check first & last elements first
-    if (input.at(0) > input.at(1))
+    if (array.addr[0] > array.addr[1])
     {
-        return input.at(0);
+        return array.addr[0];
     }
-    else if (input.at(size - 1) > input.at(size - 2))
+    else if (array.addr[array.size - 1] > array.addr[array.size - 2])
     {
-        return input.at(size - 1);
+        return array.addr[array.size - 1];
     }
 
-    if (size > 2)
+    if (array.size > 2)
     {
-        for (size_t i = 0; i < input.size(); i++)
+        uint32_t left_value   = array.addr[midpoint - 1];
+        uint32_t centre_value = array.addr[midpoint];
+        uint32_t right_value  = array.addr[midpoint + 1];
+
+        if (left_value > centre_value)    // check left first
         {
-            std::cout << std::setw(4);
-            cout << input.at(i) << " ";
+            new_end = midpoint;
         }
-        cout << endl;
-
-        uint32_t left_value   = input.at(midpoint - 1);
-        uint32_t centre_value = input.at(midpoint);
-        uint32_t right_value  = input.at(midpoint + 1);
-
-        if (right_value > centre_value) // then check right
+        else if (right_value > centre_value)    // then check right
         {
             new_start = midpoint;
         }
-        else if (left_value > centre_value) // check left first
+        else    // midpoint is the peak
         {
-            new_end = midpoint + 1;
-        }
-        else // midpoint is the peak
-        {
-            return input.at(midpoint);
+            return array.addr[midpoint];
         }
     }
     else
@@ -112,55 +117,96 @@ uint32_t find1DPeakDivideConquer(vector<uint32_t> input)
     }
 
     // search peak in new subarray
-    vector<uint32_t> new_vector(input.begin() + new_start, input.begin() + new_end);
-    return (find1DPeakDivideConquer(new_vector));
+    array_t new_array = {0, new_end - new_start + 1};
+    new_array.addr    = (uint8_t *)malloc(new_array.size);
+    for (size_t i = 0; i < new_array.size; i++)
+    {
+        new_array.addr[i] = array.addr[new_start + i];
+    }
+    uint32_t peak = find1DPeakDivideConquer(new_array);
+
+    free(new_array.addr);
+
+    return peak;
 }
 
-uint32_t find2DPeakGreedyAscent(vector<vector<uint32_t>> input)
+void fillMatrix(matrix_t matrix)
 {
-    point2d_t size     = {input.size(), input.at(0).size()};
-    point2d_t position = {size.x / 2, size.y / 2};
+    srand(time(NULL));
+    for (size_t row = 0; row < matrix.height; row++)
+    {
+        for (size_t col = 0; col < matrix.width; col++)
+        {
+            matrix.addr[row * matrix.width + col] = rand() % RAND_MAX;
+        }
+    }
+}
+
+void printMatrix(matrix_t matrix)
+{
+    for (size_t row = 0; row < matrix.height; row++)
+    {
+        for (size_t col = 0; col < matrix.width; col++)
+        {
+            printf("%4d ", matrix.addr[row * matrix.width + col]);
+        }
+        printf("\n");
+    }
+}
+
+uint32_t find2DPeakGreedyAscent(matrix_t matrix)
+{
+    printMatrix(matrix);
+
+    point2d_t position = {matrix.height / 2, matrix.width / 2};
 
     while (1)
     {
-        uint32_t centre_value = input.at(position.x).at(position.y);
-        uint32_t left_value, right_value, up_value, down_value;
+        int32_t centre_value = matrix.addr[position.row * matrix.width + position.col];
+        int32_t left_value, right_value, up_value, down_value;
+
+        printf("%4d ", centre_value);
 
         // init all neighbors
         left_value = right_value = up_value = down_value = INVALID;
 
         // check for edges
-        if (position.y > 0)
-            left_value = input.at(position.x).at(position.y - 1);
-        else if (position.y < (size.y - 1))
-            right_value = input.at(position.x).at(position.y + 1);
-        if (position.x > 0)
-            up_value = input.at(position.x - 1).at(position.y);
-        else if (position.x < (size.x - 1))
-            down_value = input.at(position.x + 1).at(position.y);
+        if (position.col > 0)
+            left_value = matrix.addr[position.row * matrix.width + (position.col - 1)];
+        if (position.col < (matrix.width - 1))
+            right_value = matrix.addr[position.row * matrix.width + (position.col + 1)];
+        if (position.row > 0)
+            up_value = matrix.addr[(position.row - 1) * matrix.width + position.col];
+        if (position.row < (matrix.height - 1))
+            down_value = matrix.addr[(position.row + 1) * matrix.width + position.col];
 
         // compare to neighbors
-        if (size.x > 1 && size.y > 1)
+        if (matrix.width > 1 && matrix.height > 1)
         {
-            if (left_value > centre_value) // check left first
+            if (left_value > centre_value)    // check left first
             {
-                position.y--;
+                printf(" -> ");
+                position.col--;
             }
-            else if (right_value > centre_value) // then check right
+            else if (right_value > centre_value)    // then check right
             {
-                position.y++;
+                printf(" -> ");
+                position.col++;
             }
-            else if (up_value > centre_value) // then check up
+            else if (up_value > centre_value)    // then check up
             {
-                position.x--;
+                printf(" -> ");
+                position.row--;
             }
-            else if (down_value > centre_value) // then check down
+            else if (down_value > centre_value)    // then check down
             {
-                position.x++;
+                printf(" -> ");
+                position.row++;
             }
-            else // midpoint is the peak
+            else    // midpoint is the peak
             {
-                return centre_value;
+                printf("\n");
+                return matrix.addr[position.row * matrix.width + position.col];
             }
         }
         else
@@ -172,84 +218,68 @@ uint32_t find2DPeakGreedyAscent(vector<vector<uint32_t>> input)
     return NOT_FOUND;
 }
 
-uint32_t find2DPeakDivideConquer(vector<vector<uint32_t>> input)
+uint32_t find2DPeakDivideConquer(matrix_t matrix)
 {
+    printMatrix(matrix);
 
-    for (size_t row = 0; row < input.size(); row++)
+    uint32_t peak      = INVALID;
+    point2d_t position = {matrix.height / 2, matrix.width / 2};
+
+    position.row = findMatrixColumnMax(matrix, position.col);
+    printf("max in column %d is %d\n", position.row, matrix.addr[position.row * matrix.width + position.col]);
+
+    uint32_t centre_value = matrix.addr[position.row * matrix.width + position.col];
+    uint32_t left_value, right_value;
+
+    // check for edges
+    left_value = right_value = INVALID;
+    if (position.col > 0)
+        left_value = matrix.addr[position.row * matrix.width + (position.col - 1)];
+    if (position.col < (matrix.width - 1))
+        right_value = matrix.addr[position.row * matrix.width + (position.col + 1)];
+
+    // compare to neighbors
+    if (left_value > centre_value)    // check left first
     {
-        for (size_t col = 0; col < input.at(row).size(); col++)
-        {
-            std::cout << std::setw(4);
-            cout << input.at(row).at(col) << " ";
-        }
-        cout << endl;
+        position.col = 0;
     }
-
-    point2d_t size     = {input.size(), input.at(0).size()};
-    point2d_t position = {size.x / 2, size.y / 2};
-
-    if (size.x > 1 && size.y > 1)
+    else if (right_value > centre_value)    // then check right
     {
-        uint32_t row = position.x;
-        position     = findMatrixColumnMax(input, position);
-        cout << "max in column " << position.y << " is " << input.at(position.x).at(position.y) << endl;
-
-        uint32_t centre_value = input.at(position.x).at(position.y);
-        uint32_t left_value, right_value, up_value, down_value;
-
-        // init all neighbors
-        left_value = right_value = up_value = down_value = INVALID;
-
-        // check for edges
-        if (position.y > 0)
-            left_value = input.at(position.x).at(position.y - 1);
-        else if (position.y < (size.y - 1))
-            right_value = input.at(position.x).at(position.y + 1);
-
-        // compare to neighbors
-        if (left_value > centre_value) // check left first
-        {
-            position.y = 0;
-        }
-        else if (right_value > centre_value) // then check right
-        {
-            position.y = size.y / 2 - 1;
-        }
-        else // midpoint is the peak
-        {
-            return centre_value;
-        }
-
-        // vector<vector<uint32_t>> new_vector(input.at(0).begin() + position.y, input.at(input.size() - 1).end());
-        vector<vector<uint32_t>> new_vector(size.x, vector<uint32_t>(size.y / 2 + 1));
-        for (size_t row = 0; row < new_vector.size(); row++)
-        {
-            for (size_t col = 0; col < new_vector.at(row).size(); col++)
-            {
-                new_vector.at(row).at(col) = input.at(row).at(position.y + col);
-            }
-        }
-
-        return find2DPeakDivideConquer(new_vector);
+        position.col = (matrix.width / 2) - 1;
     }
     else
     {
-        return NOT_FOUND;
+        return centre_value;
     }
 
-    return NOT_FOUND;
-}
-
-static point2d_t findMatrixColumnMax(vector<vector<uint32_t>> input, point2d_t position)
-{
-    point2d_t max_position = {0, position.y};
-    for (size_t i = 1; i < input.at(0).size(); i++)
+    // search peak in new subarray
+    matrix_t new_matrix = {0, (matrix.width / 2) + 1, matrix.height};
+    new_matrix.addr     = (uint8_t *)malloc(new_matrix.width * new_matrix.height);
+    for (size_t row = 0; row < new_matrix.height; row++)
     {
-        if (input.at(i).at(position.y) > input.at(max_position.x).at(position.y))
+        for (size_t col = 0; col < new_matrix.height; col++)
         {
-            max_position.x = i;
+            new_matrix.addr[row * new_matrix.width + col] = matrix.addr[row * matrix.width + (col + position.col)];
         }
     }
 
-    return max_position;
+    peak = find2DPeakDivideConquer(new_matrix);
+
+    free(new_matrix.addr);
+
+    return peak;
+}
+
+uint32_t findMatrixColumnMax(matrix_t matrix, uint32_t col)
+{
+    uint32_t column_max_row = 0;
+    for (int32_t i = 1; i < matrix.height; i++)
+    {
+        if (matrix.addr[i * matrix.width + col] > matrix.addr[column_max_row * matrix.width + col])
+        {
+            column_max_row = i;
+        }
+    }
+
+    return column_max_row;
 }
