@@ -25,14 +25,14 @@ typedef struct
 typedef struct
 {
     uint8_t *addr;
-    uint32_t size;
+    size_t size;
 } array_t;
 
 typedef struct
 {
     uint8_t *addr;
-    uint32_t width;
-    uint32_t height;
+    size_t width;
+    size_t height;
 } matrix_t;
 
 typedef enum

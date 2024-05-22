@@ -257,7 +257,7 @@ uint32_t find2DPeakDivideConquer(matrix_t matrix)
     new_matrix.addr     = (uint8_t *)malloc(new_matrix.width * new_matrix.height);
     for (size_t row = 0; row < new_matrix.height; row++)
     {
-        for (size_t col = 0; col < new_matrix.height; col++)
+        for (size_t col = 0; col < new_matrix.width; col++)
         {
             new_matrix.addr[row * new_matrix.width + col] = matrix.addr[row * matrix.width + (col + position.col)];
         }
