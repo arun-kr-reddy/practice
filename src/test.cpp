@@ -3,6 +3,7 @@
 // ************************************************
 #include "document_distance.h"
 #include "peak_finding.h"
+#include "sorting.h" a
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,6 +26,7 @@
 void peakFinding1D();
 void peakFinding2D();
 void calculateDocumentDistance();
+void sorting();
 
 // ************************************************
 // FUNCTION DEFINITIONS
@@ -39,8 +41,12 @@ int main()
     peakFinding2D();
     printf("==========================================================\n");
 
-    printf("==================== document distance ===================\n");
+    printf("===================== document distance ===================\n");
     calculateDocumentDistance();
+    printf("==========================================================\n");
+
+    printf("===================== sorting ============================\n");
+    sorting();
     printf("==========================================================\n");
 
     return 0;
@@ -125,4 +131,33 @@ void calculateDocumentDistance()
     printf("first string: \"%s\"\n", doc1.line);
     printf("second string: \"%s\"\n", doc2.line);
     printf("document distance: %d\n", document_distance);
+}
+
+void sorting()
+{
+    array_t input = {0, MAX_INPUT_SIZE_PEAKFINDING};
+    array_t copy  = input;
+
+    input.addr = (uint8_t *)malloc(input.size);
+    copy.addr  = (uint8_t *)malloc(input.size);
+
+    if ((NULL == input.addr) || (NULL == copy.addr))
+        assert(0);
+
+    fillArray(input);
+    memcpy(copy.addr, input.addr, input.size);
+
+    printArray(input);
+
+    insertionSort(input);
+    printf("insertion sorted: ");
+    printArray(input);
+
+    memcpy(input.addr, copy.addr, input.size);
+    binaryInsertionSort(input);
+    printf("binary insertion sorted: ");
+    printArray(input);
+
+    free(input.addr);
+    free(copy.addr);
 }
